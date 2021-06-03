@@ -183,7 +183,7 @@ def numplots(data):
 
 st.write("""
 # Data Science App
-In this implementation, you can to the EDA of our dataset to speed-up your analysis! \n
+In this implementation, you can do the EDA of our dataset to speed-up your analysis! \n
 To use this app, follow the steps: \n 
 1º - Import your dateset in the sidebar on the left. \n
 2º - Choose the target variable on sidebar. \n
