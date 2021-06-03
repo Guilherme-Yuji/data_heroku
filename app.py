@@ -14,6 +14,8 @@ st.set_page_config(page_title='Data Science App',
 # Model building
 def build_model(data):
 
+	global target_variable
+
 	st.markdown('**1.2- Dataset general info**')
 	st.text('Dataset shape:')
 	st.text(df.shape)
@@ -41,7 +43,7 @@ def build_model(data):
 	
 
 	st.subheader('2- Exploratory Data Analysis (EDA)')
-	hue = data.columns[-1]
+	hue = target_variable
 
 	st.markdown('**2.1- Descriptive Statistics**')
 	st.text(data.describe())
@@ -70,9 +72,14 @@ def build_model(data):
 	#st.pyplot(fig)
 
 	st.markdown('***2.4.1- Correlation***')
-	fig = plt.figure(figsize = (20,10))
-	sns.heatmap(data.corr(), cmap = 'Blues', annot = True)
-	st.pyplot(fig)
+
+	try:
+		fig = plt.figure(figsize = (20,10))
+		sns.heatmap(data.corr(), cmap = 'Blues', annot = True)
+		st.pyplot(fig)
+	except:
+		st.text('There is no numerical variable')
+
 
 	st.markdown('***2.4.2- Distributions***')
 	for a in numerical_attributes:
@@ -102,10 +109,11 @@ def build_model(data):
 
 st.write("""
 # Data Science App
-In this implementation, you can to the EDA of our dataset to speed-up our analysis! \n
-To use this app, First you need to import your dateset in the sidebar on the left and then just wait for the results. \n
-NOTES: \n
-The target variable it will be considered to be the last column of the dataset.
+In this implementation, you can to the EDA of our dataset to speed-up your analysis! \n
+To use this app, follow the steps: \n 
+1º - Import your dateset in the sidebar on the left. \n
+2º - Choose the target variable on sidebar. \n
+3º - Click on the confirmation button to run the app and just wait for the results.
 """)
 
 
@@ -132,7 +140,18 @@ if uploaded_file is not None:
     st.write(df.head())
     st.write('Last 5 rows of the dataset:')
     st.write(df.tail())
-    build_model(df)
+    checker = False
+
+
+    with st.sidebar.header('2. Select the target variable'):
+    	target_variable = st.sidebar.selectbox('Select the target variable', list(df.columns))
+
+    	if st.sidebar.button("Click to confirm the target variable"):
+	    	checker = True
+
+    if checker == True:
+    	build_model(df)
+
 else:
 	st.write("Please, input a dataset")
 
