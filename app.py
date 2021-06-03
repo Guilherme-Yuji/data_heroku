@@ -16,6 +16,7 @@ def build_model(data):
 
 	global target_variable
 
+
 	st.markdown('**1.2- Dataset general info**')
 	st.text('Dataset shape:')
 	st.text(df.shape)
@@ -49,12 +50,33 @@ def build_model(data):
 	st.text(data.describe())
 
 	st.markdown('**2.2- Outlier detectetion by Boxplot**')
-	for a in numerical_attributes:
-		st.text(a)
-		fig = plt.figure(figsize = (20,10))
-		sns.boxplot(data[a])
-		st.pyplot(fig)
+	if len(numerical_attributes) == 0:
+		st.text('There is no numerical variable')
+	else:	
+		for a in numerical_attributes:
+			st.text(a)
+			fig = plt.figure(figsize = (20,10))
+			sns.boxplot(data[a])
+			st.pyplot(fig)
 
+
+	if data[target_variable].dtypes == 'O':
+		catplots(data)
+	else:
+		if len(data[target_variable].unique()) > 5:
+			numplots(data)
+		else:
+			catplots(data)
+
+	
+
+def catplots(data):
+
+	global target_variable
+	hue = target_variable
+
+	categorical_attributes = list(data.select_dtypes(include=['object']).columns)
+	numerical_attributes = list(data.select_dtypes(include=['float64', 'int64']).columns)
 
 	st.markdown('**2.3- Target Variable plot**')
 	st.text("Target variable:" + hue)
@@ -92,20 +114,72 @@ def build_model(data):
 
 	st.markdown('**2.5- Categorical Variables**')
 
+	if len(categorical_attributes) == 0:
+		st.text('There is no categorical variable')
 
-	for a in categorical_attributes:
-		if a == hue:
-			pass
-		else:
-			st.text(a)
-			fig = plt.figure(figsize = (20,10))
-			ax = sns.countplot(y = data[a], hue = data[hue])
-			for p in ax.patches:
-				width = p.get_width()
-				ax.text(x = width*1.01, y  = p.get_y()+(p.get_height()/2), s = '{:.0f}'.format(width), va = 'center')
-			plt.legend(loc='upper left')
-			st.pyplot(fig)
+	else:
+		for a in categorical_attributes:
+			if a == hue:
+				pass
+			else:
+				st.text(a)
+				fig = plt.figure(figsize = (20,10))
+				ax = sns.countplot(y = data[a], hue = data[hue])
+				for p in ax.patches:
+					width = p.get_width()
+					ax.text(x = width*1.01, y  = p.get_y()+(p.get_height()/2), s = '{:.0f}'.format(width), va = 'center')
+				plt.legend(loc='upper left')
+				st.pyplot(fig)
+
+
+def numplots(data):
+	st.text('Under construction')
+	global target_variable
+	hue = target_variable
+
+	categorical_attributes = list(data.select_dtypes(include=['object']).columns)
+	numerical_attributes = list(data.select_dtypes(include=['float64', 'int64']).columns)
+
+	st.markdown('**2.3- Target Variable plot**')
+	st.text("Target variable:" + hue)
+	fig = plt.figure(figsize = (20,10))
+	sns.histplot(data = data , x = hue , kde = True)
+	st.pyplot(fig)
+
 	
+	st.markdown('**2.4- Numerical Variables**')
+	if len(numerical_attributes) == 0:
+		st.text('There is no categorical variable')
+
+	else:
+		for a in numerical_attributes:
+			if a == hue:
+				pass
+
+			else:
+				st.text(a)
+				fig = plt.figure(figsize = (20,10))
+				fig = sns.lmplot(data = data, x = a, y = hue)
+				st.pyplot(fig)
+
+
+
+	st.markdown('**2.5- Categorical Variables**')
+
+	if len(categorical_attributes) == 0:
+		st.text('There is no categorical variable')
+
+	else:
+		for a in categorical_attributes:
+			if a == hue:
+				pass
+			else:
+				st.text(a)
+				fig = plt.figure(figsize = (20,10))
+				sns.kdeplot(data = data, x = hue ,hue = a)
+				st.pyplot(fig)
+
+
 
 st.write("""
 # Data Science App
