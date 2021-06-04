@@ -131,6 +131,7 @@ def catplots(data):
 						height = p.get_height()
 						ax.text(x = p.get_x()+(p.get_width()/2),  y  = height * 1.01 , s = '{:.0f}'.format(height), ha = 'center')
 				
+				g.set_xticklabels(rotation=90)
 				st.pyplot(g)
 
 
