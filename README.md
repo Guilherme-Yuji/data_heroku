@@ -1,3 +1,3 @@
-# data_heroku
+# Data Science App
 
-![alt text](data_image.jpg)
+![alt text](data.jpg)
