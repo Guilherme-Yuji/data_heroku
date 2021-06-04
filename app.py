@@ -13,7 +13,7 @@ st.set_page_config(page_title='Data Science App',
 
 # Model building
 def build_model(data):
-
+	sns.set_style('darkgrid')
 	global target_variable
 
 
@@ -71,7 +71,7 @@ def build_model(data):
 	
 
 def catplots(data):
-
+	sns.set_style('darkgrid')
 	global target_variable
 	hue = target_variable
 
@@ -123,17 +123,19 @@ def catplots(data):
 				pass
 			else:
 				st.text(a)
-				fig = plt.figure(figsize = (20,10))
-				ax = sns.countplot(y = data[a], hue = data[hue])
-				for p in ax.patches:
-					width = p.get_width()
-					ax.text(x = width*1.01, y  = p.get_y()+(p.get_height()/2), s = '{:.0f}'.format(width), va = 'center')
-				plt.legend(loc='upper left')
-				st.pyplot(fig)
+				fig = plt.figure()
+				g = sns.catplot(data = data, x = a, kind = 'count', col = hue, sharey=False)
+				for i in range(data[hue].nunique()):
+					ax = g.facet_axis(0,i)
+					for p in ax.patches:
+						height = p.get_height()
+						ax.text(x = p.get_x()+(p.get_width()/2),  y  = height * 1.01 , s = '{:.0f}'.format(height), ha = 'center')
+				
+				st.pyplot(g)
 
 
 def numplots(data):
-	st.text('Under construction')
+	sns.set_style('darkgrid')
 	global target_variable
 	hue = target_variable
 
