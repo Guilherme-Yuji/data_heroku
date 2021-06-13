@@ -140,17 +140,19 @@ def catplots(data):
 			if a == hue:
 				pass
 			else:
-				st.text(a)
-				fig = plt.figure()
-				g = sns.catplot(data = data, x = a, kind = 'count', col = hue, sharey=False)
-				for i in range(data[hue].nunique()):
-					ax = g.facet_axis(0,i)
-					for p in ax.patches:
-						height = p.get_height()
-						ax.text(x = p.get_x()+(p.get_width()/2),  y  = height * 1.01 , s = '{:.0f}'.format(height), ha = 'center')
-				
-				g.set_xticklabels(rotation=90)
-				st.pyplot(g)
+				if len(data[a].unique()) < 13:
+
+					st.text(a)
+					fig = plt.figure()
+					g = sns.catplot(data = data, x = a, kind = 'count', col = hue, sharey=False)
+					for i in range(data[hue].nunique()):
+						ax = g.facet_axis(0,i)
+						for p in ax.patches:
+							height = p.get_height()
+							ax.text(x = p.get_x()+(p.get_width()/2),  y  = height * 1.01 , s = '{:.0f}'.format(height), ha = 'center')
+					
+					g.set_xticklabels(rotation=90)
+					st.pyplot(g)
 
 		st.markdown('***2.5.1 - Correlation between categorical***')
 		corrM = np.zeros((len(categorical_attributes),len(categorical_attributes)))
@@ -208,10 +210,11 @@ def numplots(data):
 			if a == hue:
 				pass
 			else:
-				st.text(a)
-				fig = plt.figure(figsize = (20,10))
-				sns.kdeplot(data = data, x = hue ,hue = a)
-				st.pyplot(fig)
+				if len(data[a].unique()) < 13:
+					st.text(a)
+					fig = plt.figure(figsize = (20,10))
+					sns.kdeplot(data = data, x = hue ,hue = a)
+					st.pyplot(fig)
 
 		st.markdown('***2.5.1 - Correlation between categorical***')
 		corrM = np.zeros((len(categorical_attributes),len(categorical_attributes)))
